@@ -1,0 +1,21 @@
+# Secrets and local data
+.env
+data/
+*.log
+
+# Huge local runtimes / caches (do not upload)
+.venv/
+runtime/
+wheels/
+__pycache__/
+*.py[cod]
+*.exe
+
+# PyInstaller build leftovers
+launcher/build/
+launcher/dist/
+
+# Editor
+.cursor/
+.idea/
+.vscode/

@@ -1,7 +1,12 @@
 # Open WebUI（无 Docker，Windows）
 
-目录：`F:\job\open-webui`  
-接本仓库 `OpenAIGetWayController`：Chat / Embedding / Wishper。
+仓库地址：https://github.com/zyg1923/open-webui
+
+```powershell
+git clone https://github.com/zyg1923/open-webui.git
+```
+
+Windows 上不用 Docker 运行。克隆后没有 `.venv`、`wheels`、`runtime` 和启动器 exe，按下面的「迁到内网」和「未提交到 Git 的文件」安装、打包。
 
 ## 本机启动
 
@@ -80,10 +85,6 @@ cd F:\job\open-webui
 
 - `.venv` 跨机器拷贝经常因路径/用户不同失效，内网优先 `install.ps1` + `wheels`。
 - `data\` 是会话/账号库，需要保留历史再拷。
-
-## 源码
-
-运行用的是 PyPI 包 `open-webui`（对应 https://github.com/open-webui/open-webui 发行版），不是 Docker。
 
 ## 未提交到 Git 的文件
 

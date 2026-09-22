@@ -11,9 +11,11 @@ __pycache__/
 *.py[cod]
 *.exe
 
-# PyInstaller build leftovers
+# PyInstaller 编译产物（可重新打包）
 launcher/build/
 launcher/dist/
+*.pkg
+*.toc
 
 # Editor
 .cursor/

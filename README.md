@@ -84,3 +84,33 @@ cd F:\job\open-webui
 ## 源码
 
 运行用的是 PyPI 包 `open-webui`（对应 https://github.com/open-webui/open-webui 发行版），不是 Docker。
+
+## 未提交到 Git 的文件
+
+这些文件有用，但不是源码。克隆仓库后不会自动出现，需要按下面方式补上。单文件超过 100MB 的，GitHub 会直接拒绝，所以不能靠 Git 同步。
+
+| 路径 | 作用 | 没有它会怎样 | 怎么补 |
+| --- | --- | --- | --- |
+| `.venv\` | 已安装的 Python 包，真正跑页面的代码在这里 | `start.ps1` 起不来 | 有网执行 `.\install.ps1`；内网把 `wheels\` 一起拷来再执行 `.\install.ps1` |
+| `wheels\` | 离线安装包。其中 `torch` 轮子约 118MB，`open_webui` 轮子约 139MB | 没外网时无法 `install.ps1` | 有网机器执行 `.\pack-offline.ps1`，再用 U 盘或共享目录拷贝，不要走 Git |
+| `runtime\` | 内嵌 Python 3.11，约 70MB。`start.ps1` 和启动器都找 `runtime\python.exe` | 双击 exe 或 `start.ps1` 会报找不到 Python | 从已经能跑的机器整目录拷贝。这是运行环境，不是本仓库编译出来的 |
+| `data\` | 账号、会话数据库 | 程序能开，但没有历史账号和对话 | 需要保留历史时单独拷贝 |
+| `.env` | 网关地址和密钥 | 用仓库里的 `.env.intranet.example` 复制一份再改 | 不要把真实密钥提交到 Git |
+| `LancangAI.exe`、`澜沧江AI.exe` | 启动器编译结果，各约 28MB | 仍可用 `.\start.ps1` 启动 | 见下方重新打包 |
+| `launcher\build\`、`launcher\dist\` | PyInstaller 中间文件和输出 | 不影响源码 | 重新打包时自动生成 |
+
+已经提交、需要保留的内容：
+
+- `redist\vc\` 里的 VC++ 运行库。体积小，Torch 在 Windows 上需要它们。
+- `.venv` 里改过的 5 个文件（前端页面、`custom.css`、`main.py`、`middleware.py`）。其余 `.venv` 不入库。
+
+### 重新打包启动器
+
+在已安装 PyInstaller 的环境中：
+
+```powershell
+cd F:\job\open-webui\launcher
+python -m PyInstaller --noconfirm LancangAI.spec
+```
+
+把生成的 exe 复制到仓库根目录，文件名用 `LancangAI.exe` 或 `澜沧江AI.exe`。发给同事时按 `发给同事.txt`：整个目录打包，必须带上 `runtime\`、`.venv\`、`.env`、`serve_backend.py`，不要只发一个 exe。

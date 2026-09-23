@@ -14,13 +14,30 @@ if (-not (Test-Path (Join-Path $root ".venv\Scripts\python.exe"))) {
 
 $python = Join-Path $root ".venv\Scripts\python.exe"
 $wheels = Join-Path $root "wheels"
+
+# 优先安装自定义 open_webui-*lancang*.whl（你的改包）
+$custom = $null
 if (Test-Path $wheels) {
-  Write-Host "离线安装 wheels ..."
-  & $uv pip install --python $python --no-index --find-links $wheels open-webui
-} else {
-  Write-Host "在线安装 open-webui（清华镜像）..."
-  $env:UV_LINK_MODE = "copy"
-  & $uv pip install --python $python --index-url "https://pypi.tuna.tsinghua.edu.cn/simple" --extra-index-url "https://pypi.org/simple" --find-links (Join-Path $root "wheels") "open-webui==0.11.3"
+  $custom = Get-ChildItem $wheels -Filter "open_webui*lancang*.whl" -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
 }
 
+if ($custom) {
+  Write-Host "安装自定义包（替换官方 open-webui）: $($custom.Name)"
+  if (Test-Path $wheels) {
+    & $uv pip install --python $python --no-index --find-links $wheels --force-reinstall $custom.FullName
+  } else {
+    & $uv pip install --python $python --force-reinstall $custom.FullName
+  }
+} elseif (Test-Path $wheels) {
+  Write-Host "未找到 lancang 自定义 wheel，离线安装官方 open-webui ..."
+  & $uv pip install --python $python --no-index --find-links $wheels open-webui
+} else {
+  Write-Host "在线安装官方 open-webui==0.11.3（清华镜像）..."
+  $env:UV_LINK_MODE = "copy"
+  & $uv pip install --python $python --index-url "https://pypi.tuna.tsinghua.edu.cn/simple" --extra-index-url "https://pypi.org/simple" "open-webui==0.11.3"
+}
+
+& $python -c "import importlib.metadata as m; print('installed open-webui', m.version('open-webui'))"
 Write-Host "安装完成。运行 start.ps1"

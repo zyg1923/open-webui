@@ -78,21 +78,27 @@ foreach ($exe in @("LancangAI.exe", "澜沧江AI.exe")) {
   if (Test-Path $p) { Copy-Item -Force $p (Join-Path $stage $exe) }
 }
 
-# 使用说明
+# 使用说明（与 README 同事下载流程一致）
 @"
 澜沧江 Open WebUI 发行包 $tag
 ================================
 
-1. 解压到任意目录（路径不要有奇怪权限）
+下载来源：GitHub Releases（不要只 git clone）
+https://github.com/zyg1923/open-webui/releases
+
+安装步骤：
+1. 解压到任意目录
 2. Copy-Item .env.intranet.example .env
-3. 按内网改 .env 里的 OPENAI_API_BASE_URL
-4. 执行 .\install.ps1   （会安装 wheels 里的自定义 open-webui+lancang）
+3. 用记事本改 .env：三处 OPENAI / RAG / AUDIO 的 Base URL 改成内网网关
+4. 执行 .\install.ps1
+   （会安装 wheels 里的自定义 open-webui+lancang，不是官网原版）
 5. 双击 澜沧江AI.exe / LancangAI.exe，或执行 .\start.ps1
+6. 浏览器打开 http://127.0.0.1:3000
 
 说明：
-- 本 zip 走 GitHub Release 分发，不进 Git 仓库
-- 自定义包：wheels\open_webui-*-lancang*.whl（已含千问/悬浮白字等修改）
-- 不要用官方 PyPI 的 open-webui 覆盖本包
+- 自定义包：wheels\open_webui-*-lancang*.whl（千问/悬浮白字等已打进包）
+- 有 runtime\ 时一般不需要再装系统 Python / uv
+- 不要再用官方 PyPI 的 open-webui 覆盖本包
 "@ | Set-Content -Encoding UTF8 (Join-Path $stage "使用说明.txt")
 
 if (Test-Path $zipPath) { Remove-Item -Force $zipPath }

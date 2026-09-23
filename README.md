@@ -11,12 +11,12 @@
 
 ### 1. 下载
 
-1. 打开：https://github.com/zyg1923/open-webui/releases  
-2. 选最新版本（例如 `v1.0.1`）  
-3. 在 **Assets** 里下载：  
-   `lancang-open-webui-x.y.z-windows.zip`
+1. 打开最新发行版：https://github.com/zyg1923/open-webui/releases/tag/v1.0.1  
+   （以后有新版本就打开 https://github.com/zyg1923/open-webui/releases 选最新）  
+2. 在 **Assets** 里下载：  
+   `lancang-open-webui-1.0.1-windows.zip`（约 311MB）
 
-（若还没有 Release，向维护者要该 zip，或等发版完成。）
+不要只用 `git clone`：仓库里没有 wheel / runtime / exe。
 
 ### 2. 安装
 

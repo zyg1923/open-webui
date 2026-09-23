@@ -115,3 +115,24 @@ python -m PyInstaller --noconfirm LancangAI.spec
 ```
 
 把生成的 exe 复制到仓库根目录，文件名用 `LancangAI.exe` 或 `澜沧江AI.exe`。发给同事时按 `发给同事.txt`：整个目录打包，必须带上 `runtime\`、`.venv\`、`.env`、`serve_backend.py`，不要只发一个 exe。
+
+## GitHub 发版（推荐）
+
+大文件（自定义 wheel、runtime、exe）**不进 Git**，挂在 Release：
+
+```powershell
+# 1. 用当前改过的代码打自定义 wheel
+.\pack-custom-wheel.ps1
+
+# 2. 打发行 zip（含 wheels + runtime + exe + 脚本）
+.\pack-release.ps1 -Version 1.0.1
+
+# 3. 能访问 GitHub 时：登录后推送并创建 Release
+gh auth login
+git push -u origin main
+git tag v1.0.1
+git push origin v1.0.1
+gh release create v1.0.1 "dist-release\lancang-open-webui-1.0.1-windows.zip" --title "v1.0.1" --notes "澜沧江 Open WebUI 离线包（含自定义 open-webui+lancang）"
+```
+
+同事：打开仓库 Releases → 下载 zip → 解压 → 按 `使用说明.txt` 安装。
